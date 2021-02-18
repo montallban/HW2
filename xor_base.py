@@ -13,7 +13,7 @@ import pickle
 from tensorflow.keras.layers import InputLayer, Dense
 from tensorflow.keras.models import Sequential
 
-fp = open("hw1_dataset.pkl", "rb")
+fp = open("/home/mcmontalbano/AML/hw1_dataset.pkl", "rb")
 foo = pickle.load(fp)
 fp.close()
 
