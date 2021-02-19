@@ -14,12 +14,9 @@ import pickle
 from tensorflow.keras.layers import InputLayer, Dense
 from tensorflow.keras.models import Sequential
 
-fp = open(r"C:\Users\User\aml2\AML\hw1_dataset.pkl", "rb")
+fp = open(r"C://Users/User//AML//hw1_dataset.pkl", "rb")
 foo = pickle.load(fp)
 fp.close()
-
-ins = foo["ins"] # grab inputs
-outs = foo["outs"]
 
 #################################################################
 # Default plotting parameters
@@ -63,6 +60,9 @@ def execute_exp(args):
     ##############################
     # Run the experiment
     # Create training set: XOR
+    ins = foo["ins"] # grab inputs 
+    outs = foo["outs"]
+    
     model = build_model(ins.shape[1], args.n_hidden1, args.n_hidden2, args.n_hidden3, outs.shape[1], activation1=args.activation1,
                        activation2=args.activation2, lrate=args.lrate)
 
@@ -90,12 +90,12 @@ def execute_exp(args):
     fp.close()
 
 
-def display_learning_curve(fname):
+def display_learning_curve(exp):
     '''
     Display the learning curve that is stored in fname
     '''
-    print(fname)
-    # Load the histry file
+    
+    # Load the history file
     fp = open(fname, "rb")
     history = pickle.load(fp)
     fp.close()
@@ -106,7 +106,7 @@ def display_learning_curve(fname):
     plt.ylabel('MSE')
     plt.xlabel('epochs')
     plt.show()
-#    f.savefig("exp_{}.pdf".format(exp), bbox_inches='tight')
+    f.savefig("exp_{}.pdf".format(exp), bbox_inches='tight')
 
 def display_learning_curve_set(base):
     '''
@@ -117,16 +117,17 @@ def display_learning_curve_set(base):
     files.sort()
     
     # Iterate over the files
-    for f in files:
+    for idx, f in enumerate(files):
         # Open and display each learning curve
         with open(f, "rb") as fp:
             history = pickle.load(fp)
+            f = plt.figure()
+            plt.ylabel('MSE')
+            plt.xlabel('epochs')
             plt.plot(history['loss'])
-            
+            plt.show()
+            f.save_fig("exp_{}.pdf".format(idx), bbox_inches='tight')
     # Finish off the figure
-    plt.ylabel('MSE')
-    plt.xlabel('epochs')
-    plt.legend(files)
     
 def create_parser():
     '''
@@ -135,7 +136,6 @@ def create_parser():
     parser = argparse.ArgumentParser(description='Bool learner')
     parser.add_argument('--exp', type=int, default=0, help='Experiment index')
     parser.add_argument('--lrate', type=float, default=0.01, help='Learning Rate')
-    parser.add_argument('--activation0', type=str, default='elu',help='Activation Function0')
     parser.add_argument('--activation1', type=str, default='elu',help='Activation Function1')
     parser.add_argument('--activation2', type=str, default='elu',help='Activation Function2')
     parser.add_argument('--n_hidden1', type=int, default=8, help='Number of hidden units')
@@ -151,22 +151,16 @@ if __name__ == "__main__":
 
     # Do the work
     args.exp=6
-    
- #   args.n_hidden1=8
- #   args.n_hidden2=4
-  #  args.n_hidden3=2
-   # activation0="tanh"
-    #args.activation2="tanh"
-   # execute_exp(args)
-    args.exp=7
-    args.n_hidden1=4
-    args.n_hidden2=2
-    args.n_hidden3=4
-    args.lrate=0.01
-    args.activation1="sigmoid"
-    args.activation2="tanh"
+    n_hidden1=8
+    n_hidden2=4
+    n_hidden3=2
     execute_exp(args)
-    sys.exit()
+    args.exp=7
+    n_hidden1=4
+    n_hidden2=2
+    n_hidden3=4
+    args.lrate=0.01
+    execute_exp(args)
     args.exp=8
     n_hidden1=16
     n_hidden2=8

@@ -14,12 +14,9 @@ import pickle
 from tensorflow.keras.layers import InputLayer, Dense
 from tensorflow.keras.models import Sequential
 
-fp = open(r"C:\Users\User\aml2\AML\hw1_dataset.pkl", "rb")
+fp = open("/home/mcmontalbano/AML/hw1_dataset.pkl", "rb")
 foo = pickle.load(fp)
 fp.close()
-
-ins = foo["ins"] # grab inputs
-outs = foo["outs"]
 
 #################################################################
 # Default plotting parameters
@@ -28,7 +25,7 @@ plt.rcParams['figure.figsize'] = (10, 6)
 plt.rcParams['font.size'] = FONTSIZE
 
 #################################################################
-def build_model(n_inputs, n_hidden1, n_hidden2,n_hidden3, n_output, activation1='elu',activation2='elu',lrate=0.001):
+def build_model(n_inputs, n_hidden1, n_hidden2, n_output, activation1='elu',activation2='elu',lrate=0.001):
     '''
     Construct a network with one hidden layer
     - Adam optimizer
@@ -38,7 +35,7 @@ def build_model(n_inputs, n_hidden1, n_hidden2,n_hidden3, n_output, activation1=
     model.add(InputLayer(input_shape=(n_inputs,)))
     model.add(Dense(n_hidden1, use_bias=True, name="hidden1", activation=activation1))
     model.add(Dense(n_hidden2, use_bias=True, name="hidden2", activation=activation1))
-    model.add(Dense(n_hidden3, use_bias=True, name="hidden3", activation=activation1))
+#    model.add(Dense(n_hidden3, use_bias=True, name="hidden3", activation=activation1))
     model.add(Dense(n_output, use_bias=True, name="output", activation=activation2))
     
     # Optiemizer
@@ -63,7 +60,10 @@ def execute_exp(args):
     ##############################
     # Run the experiment
     # Create training set: XOR
-    model = build_model(ins.shape[1], args.n_hidden1, args.n_hidden2, args.n_hidden3, outs.shape[1], activation1=args.activation1,
+    ins = foo["ins"] # grab inputs 
+    outs = foo["outs"]
+    
+    model = build_model(ins.shape[1], args.n_hidden1, args.n_hidden2, outs.shape[1], activation1=args.activation1,
                        activation2=args.activation2, lrate=args.lrate)
 
     # Callbacks
@@ -90,12 +90,12 @@ def execute_exp(args):
     fp.close()
 
 
-def display_learning_curve(fname):
+def display_learning_curve(exp):
     '''
     Display the learning curve that is stored in fname
     '''
-    print(fname)
-    # Load the histry file
+    
+    # Load the history file
     fp = open(fname, "rb")
     history = pickle.load(fp)
     fp.close()
@@ -106,7 +106,7 @@ def display_learning_curve(fname):
     plt.ylabel('MSE')
     plt.xlabel('epochs')
     plt.show()
-#    f.savefig("exp_{}.pdf".format(exp), bbox_inches='tight')
+    f.savefig("exp_{}.pdf".format(exp), bbox_inches='tight')
 
 def display_learning_curve_set(base):
     '''
@@ -117,16 +117,17 @@ def display_learning_curve_set(base):
     files.sort()
     
     # Iterate over the files
-    for f in files:
+    for idx, f in enumerate(files):
         # Open and display each learning curve
         with open(f, "rb") as fp:
             history = pickle.load(fp)
+            f = plt.figure()
+            plt.ylabel('MSE')
+            plt.xlabel('epochs')
             plt.plot(history['loss'])
-            
+            plt.show()
+            f.save_fig("exp_{}.pdf".format(idx), bbox_inches='tight')
     # Finish off the figure
-    plt.ylabel('MSE')
-    plt.xlabel('epochs')
-    plt.legend(files)
     
 def create_parser():
     '''
@@ -135,12 +136,11 @@ def create_parser():
     parser = argparse.ArgumentParser(description='Bool learner')
     parser.add_argument('--exp', type=int, default=0, help='Experiment index')
     parser.add_argument('--lrate', type=float, default=0.01, help='Learning Rate')
-    parser.add_argument('--activation0', type=str, default='elu',help='Activation Function0')
     parser.add_argument('--activation1', type=str, default='elu',help='Activation Function1')
     parser.add_argument('--activation2', type=str, default='elu',help='Activation Function2')
     parser.add_argument('--n_hidden1', type=int, default=8, help='Number of hidden units')
     parser.add_argument('--n_hidden2', type=int, default=8, help='Number of hidden units')
-    parser.add_argument('--n_hidden3', type=int, default=8, help='Number of hidden units in layer 3')
+    #parser.add_argument('--n_hidden3', type=int, default=8, help='Number of hidden units in layer 3')
     parser.add_argument('--epochs', type=int, default=10000, help='Number of epochs')
     return parser
 
@@ -150,30 +150,28 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # Do the work
-    args.exp=6
     
- #   args.n_hidden1=8
- #   args.n_hidden2=4
-  #  args.n_hidden3=2
-   # activation0="tanh"
-    #args.activation2="tanh"
-   # execute_exp(args)
-    args.exp=7
-    args.n_hidden1=4
-    args.n_hidden2=2
-    args.n_hidden3=4
-    args.lrate=0.01
-    args.activation1="sigmoid"
-    args.activation2="tanh"
+    args.exp=0
     execute_exp(args)
-    sys.exit()
-    args.exp=8
-    n_hidden1=16
-    n_hidden2=8
-    n_hidden3=4
+    args.exp=1
+    n_hidden1=8
+    n_hidden2=4
     execute_exp(args)
-    args.exp=9
+    args.exp=2
+    args.lrate=0.001
+    execute_exp(args)
+    args.exp=3
+    args.lrate=0.001
     args.n_hidden1=8
     args.n_hidden2=4
-    args.n_hidden3=2
     execute_exp(args)
+    args.exp=4
+    args.n_hidden=32
+    args.n_hidden2=32
+    execute_exp(args)
+    args.exp=5
+    args.n_hidden1=16
+    args.n_hidden2=8
+    execute_exp(args)
+    
+    

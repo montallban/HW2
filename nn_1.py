@@ -14,7 +14,7 @@ import pickle
 from tensorflow.keras.layers import InputLayer, Dense
 from tensorflow.keras.models import Sequential
 
-fp = open("/home/mcmontalbano/AML/hw1_dataset.pkl", "rb")
+fp = open(r"C:\Users\User\aml2\AML\hw1_dataset.pkl", "rb")
 foo = pickle.load(fp)
 fp.close()
 
@@ -125,8 +125,8 @@ def display_learning_curve_set(base):
             plt.ylabel('MSE')
             plt.xlabel('epochs')
             plt.plot(history['loss'])
-            plt.show()
-            f.save_fig("exp_{}.pdf".format(idx), bbox_inches='tight')
+            #plt.show()
+            #f.save_fig("exp_{}.pdf".format(idx), bbox_inches='tight')
     # Finish off the figure
     
 def create_parser():
