@@ -1,4 +1,0 @@
-  File "xor_base.py", line 71
-    restore_best_weights=True,
-                       ^
-SyntaxError: invalid syntax

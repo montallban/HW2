@@ -1,0 +1,10 @@
+2021-02-18 21:50:30.959088: W tensorflow/stream_executor/platform/default/dso_loader.cc:55] Could not load dynamic library 'libnvinfer.so.6'; dlerror: libnvinfer.so.6: cannot open shared object file: No such file or directory
+2021-02-18 21:50:30.959201: W tensorflow/stream_executor/platform/default/dso_loader.cc:55] Could not load dynamic library 'libnvinfer_plugin.so.6'; dlerror: libnvinfer_plugin.so.6: cannot open shared object file: No such file or directory
+2021-02-18 21:50:30.959217: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:30] Cannot dlopen some TensorRT libraries. If you would like to use Nvidia GPU with TensorRT, please make sure the missing libraries mentioned above are installed properly.
+2021-02-18 21:50:32.654019: W tensorflow/stream_executor/platform/default/dso_loader.cc:55] Could not load dynamic library 'libcuda.so.1'; dlerror: libcuda.so.1: cannot open shared object file: No such file or directory
+2021-02-18 21:50:32.654416: E tensorflow/stream_executor/cuda/cuda_driver.cc:351] failed call to cuInit: UNKNOWN ERROR (303)
+2021-02-18 21:50:32.654454: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (c322.oscer.ou.edu): /proc/driver/nvidia/version does not exist
+2021-02-18 21:50:32.654695: I tensorflow/core/platform/cpu_feature_guard.cc:142] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2021-02-18 21:50:32.664032: I tensorflow/core/platform/profile_utils/cpu_utils.cc:94] CPU Frequency: 2300140000 Hz
+2021-02-18 21:50:32.665913: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x4ff9b90 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-02-18 21:50:32.665937: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version

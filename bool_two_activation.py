@@ -6,7 +6,6 @@ from tensorflow import keras
 import os
 import time
 import re
-import sys
 
 import argparse
 import pickle
@@ -68,7 +67,7 @@ def execute_exp(args):
     #checkpoint_cb = keras.callbacks.ModelCheckpoint("xor_model.h5",
     #                                                save_best_only=True)
 
-    early_stopping_cb = keras.callbacks.EarlyStopping(patience=50,
+    early_stopping_cb = keras.callbacks.EarlyStopping(patience=100,
                                                  restore_best_weights=True,
                                                  min_delta=.00001)
 
@@ -76,17 +75,12 @@ def execute_exp(args):
     history = model.fit(x=ins, y=outs, epochs=args.epochs, verbose=False,
                         validation_data=(ins, outs),
                         callbacks=[early_stopping_cb])
-   
-    # predict and save as csv
-    predictions = model.predict(np.asarray(ins))    
-    np.savetxt('predictions_{}'.format(args.exp),predictions,delimiter=',')
 
     # Save the training history
     fname = "bool_exp_%02d.pkl"%(args.exp)
     fp = open(fname, "wb")
     pickle.dump(history.history, fp)
     fp.close()
-
 
 def display_learning_curve(exp):
     '''
@@ -131,13 +125,14 @@ def create_parser():
     '''
     Create a parser for the XOR experiment
     '''
-    parser = argparse.ArgumentParser(description='Bool learner')
+    parser = argparse.ArgumentParser(description='XOR Learner')
     parser.add_argument('--exp', type=int, default=0, help='Experiment index')
     parser.add_argument('--lrate', type=float, default=0.01, help='Learning Rate')
     parser.add_argument('--activation1', type=str, default='elu',help='Activation Function1')
     parser.add_argument('--activation2', type=str, default='elu',help='Activation Function2')
     parser.add_argument('--n_hidden', type=int, default=16, help='Number of hidden units')
     parser.add_argument('--epochs', type=int, default=10000, help='Number of epochs')
+
     return parser
 
 if __name__ == "__main__":
@@ -146,23 +141,9 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # Do the work
-    args.exp=0
-    execute_exp(args)
-    args.exp=1
-    args.activation1='elu'
-    args.activation2='sigmoid'
-    n_hidden=8
-    execute_exp(args)
-    args.exp=2
-    args.lrate=0.001
-    args.activation1="tanh"
-    args.activation2="sigmoid"
     execute_exp(args)
     args.exp=4
-    args.activation1="tanh"
-    args.activation2="sigmoid"
-    args.lrate=0.01
-    args.n_hidden=32
+    args.activation1='elu'
     execute_exp(args)
     args.exp=5
     args.activation1='tanh'
@@ -192,7 +173,10 @@ if __name__ == "__main__":
     args.activation1="tanh"
     args.activation2="sigmoid"
     args.n_hidden=4
-    execute_exp(args)  
+    execute_exp(args)
+    
+    
+    
     
     
     
