@@ -67,7 +67,7 @@ def execute_exp(args):
     #checkpoint_cb = keras.callbacks.ModelCheckpoint("xor_model.h5",
     #                                                save_best_only=True)
 
-    early_stopping_cb = keras.callbacks.EarlyStopping(patience=10000
+    early_stopping_cb = keras.callbacks.EarlyStopping(patience=10000,
                                                  restore_best_weights=True,
                                                  min_delta=.00001)
 
@@ -82,7 +82,7 @@ def execute_exp(args):
     pickle.dump(history.history, fp)
     fp.close()
 
-def display_learning_curve(fname):
+def display_learning_curve(exp):
     '''
     Display the learning curve that is stored in fname
     '''
@@ -98,7 +98,7 @@ def display_learning_curve(fname):
     plt.ylabel('MSE')
     plt.xlabel('epochs')
     plt.show()
-    f.savefig("exp.pdf", bbox_inches='tight')
+    f.savefig("exp_{}.pdf".format(exp), bbox_inches='tight')
 
 def display_learning_curve_set(base):
     '''
@@ -109,16 +109,17 @@ def display_learning_curve_set(base):
     files.sort()
     
     # Iterate over the files
-    for f in files:
+    for idx, f in enumerate(files):
         # Open and display each learning curve
         with open(f, "rb") as fp:
             history = pickle.load(fp)
+            f = plt.figure()
+            plt.ylabel('MSE')
+            plt.xlabel('epochs')
             plt.plot(history['loss'])
-            
+            plt.show()
+            f.save_fig("exp_{}.pdf".format(idx), bbox_inches='tight')
     # Finish off the figure
-    plt.ylabel('MSE')
-    plt.xlabel('epochs')
-    plt.legend(files)
     
 def create_parser():
     '''
@@ -140,5 +141,24 @@ if __name__ == "__main__":
 
     # Do the work
     execute_exp(args)
+    args.exp=1
+    args.activation='elu'
+    execute_exp(args)
+    args.exp=2
+    args.activation='tanh'
+    execute_exp(args)
+    args.exp=3
+    args.activation='relu'
+    execute_exp(args)
+    display_learning_curve_set("bool_exp")
     
-    display_learning_curve("bool_exp_00.pkl")
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
