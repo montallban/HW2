@@ -17,5 +17,5 @@
 # Do not change this line unless you have your own python/tensorflow/keras set up
 source ~fagg/pythonenv/tensorflow/bin/activate
 # Change this line to start an instance of your experiment
-python xor_base.py
+python nn_2_2.py
 

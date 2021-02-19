@@ -178,14 +178,35 @@ if __name__ == "__main__":
     args.exp=4
     args.n_hidden1=8
     args.n_hidden2=4
+<<<<<<< HEAD
+=======
+    args.n_hidden3=2
+    args.activation0="tanh"
+    args.activation2="tanh"
+    execute_exp(args)
+    args.exp=2
+    args.n_hidden1=32
+    args.n_hidden2=16
+>>>>>>> e6fe5e0902d10cb10d13077a2638bfdcf8b4dfe3
     args.n_hidden3=8
     args.activation0="tanh"
     args.activation2="tanh"
     args.epochs=10000
     execute_exp(args)
 
+<<<<<<< HEAD
     parser = create_parser()
     args = parser.parse_args()
+=======
+    args.exp=3
+    args.n_hidden1=8
+    args.n_hidden2=4
+    args.n_hidden3=2
+    args.activation0="tanh"
+    args.activation1="sigmoid"
+    args.activation2="tanh"
+    execute_exp(args)
+>>>>>>> e6fe5e0902d10cb10d13077a2638bfdcf8b4dfe3
 
     args.exp=5
     args.n_hidden1=100

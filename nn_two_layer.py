@@ -17,7 +17,8 @@ from tensorflow.keras.models import Sequential
 fp = open("/home/mcmontalbano/AML/hw1_dataset.pkl", "rb")
 foo = pickle.load(fp)
 fp.close()
-
+ins = foo['ins']
+np.savetxt("ins.csv",ins,delimiter=',')
 #################################################################
 # Default plotting parameters
 FONTSIZE = 18
