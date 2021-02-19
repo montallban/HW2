@@ -25,7 +25,7 @@ plt.rcParams['figure.figsize'] = (10, 6)
 plt.rcParams['font.size'] = FONTSIZE
 
 #################################################################
-def build_model(n_inputs, n_hidden1, n_hidden2,n_hidden3, n_output, activation1='elu',activation2='elu',lrate=0.001):
+def build_model(n_inputs, n_hidden1, n_hidden2, n_output, activation1='elu',activation2='elu',lrate=0.001):
     '''
     Construct a network with one hidden layer
     - Adam optimizer
@@ -35,7 +35,7 @@ def build_model(n_inputs, n_hidden1, n_hidden2,n_hidden3, n_output, activation1=
     model.add(InputLayer(input_shape=(n_inputs,)))
     model.add(Dense(n_hidden1, use_bias=True, name="hidden1", activation=activation1))
     model.add(Dense(n_hidden2, use_bias=True, name="hidden2", activation=activation1))
-    model.add(Dense(n_hidden3, use_bias=True, name="hidden3", activation=activation1))
+#    model.add(Dense(n_hidden3, use_bias=True, name="hidden3", activation=activation1))
     model.add(Dense(n_output, use_bias=True, name="output", activation=activation2))
     
     # Optiemizer
@@ -63,7 +63,7 @@ def execute_exp(args):
     ins = foo["ins"] # grab inputs 
     outs = foo["outs"]
     
-    model = build_model(ins.shape[1], args.n_hidden1, args.n_hidden2, args.n_hidden3, outs.shape[1], activation1=args.activation1,
+    model = build_model(ins.shape[1], args.n_hidden1, args.n_hidden2, outs.shape[1], activation1=args.activation1,
                        activation2=args.activation2, lrate=args.lrate)
 
     # Callbacks
@@ -140,7 +140,7 @@ def create_parser():
     parser.add_argument('--activation2', type=str, default='elu',help='Activation Function2')
     parser.add_argument('--n_hidden1', type=int, default=8, help='Number of hidden units')
     parser.add_argument('--n_hidden2', type=int, default=8, help='Number of hidden units')
-    parser.add_argument('--n_hidden3', type=int, default=8, help='Number of hidden units in layer 3')
+    #parser.add_argument('--n_hidden3', type=int, default=8, help='Number of hidden units in layer 3')
     parser.add_argument('--epochs', type=int, default=10000, help='Number of epochs')
     return parser
 
@@ -150,29 +150,29 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # Do the work
-    args.exp=6
+    
+    args.exp=0
+    execute_exp(args)
+    args.exp=1
+    sys.exit()
     n_hidden1=8
     n_hidden2=4
-    n_hidden3=2
     execute_exp(args)
-    args.exp=7
-    n_hidden1=4
-    n_hidden2=2
-    n_hidden3=4
-    args.lrate=0.01
+    args.exp=2
+    args.lrate=0.001
     execute_exp(args)
-    args.exp=8
-    n_hidden1=16
-    n_hidden2=8
-    n_hidden3=4
-    execute_exp(args)
-    args.exp=9
+    args.exp=3
+    args.lrate=0.001
     args.n_hidden1=8
     args.n_hidden2=4
-    args.n_hidden3=2
-    execute_exp(args)  
-    
-    
-    
+    execute_exp(args)
+    args.exp=4
+    args.n_hidden=32
+    args.n_hidden2=32
+    execute_exp(args)
+    args.exp=5
+    args.n_hidden1=16
+    args.n_hidden2=8
+    execute_exp(args)
     
     
