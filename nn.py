@@ -150,12 +150,36 @@ if __name__ == "__main__":
     parser = create_parser()
     args = parser.parse_args()
 
-    # Do the work
+    # exp 1
+    args.exp=1
+    args.n_hidden1=8
+    args.n_hidden2=4
+    args.n_hidden3=2
+    args.activation0="tf.nn.relu"
+    args.activation2="tanh"
+    execute_exp(args)
+    args.exp=2
+    args.n_hidden1=32
+    args.n_hidden2=16
+    args.n_hidden3=8
+    args.activation0="tanh"
+    args.activation2="tanh"
+    execute_exp(args)
+
+    args.exp=3
+    args.n_hidden1=8
+    args.n_hidden2=4
+    args.n_hidden3=2
+    args.activation0="tanh"
+    args.activation1="tf.nn.relu"
+    args.activation2="tanh"
+    execute_exp(args)
+
     args.exp=6
     args.n_hidden1=8
     args.n_hidden2=4
     args.n_hidden3=2
-    activation0="tanh"
+    args.activation0="tanh"
     args.activation2="tanh"
     execute_exp(args)
     args.exp=7
@@ -163,32 +187,23 @@ if __name__ == "__main__":
     args.n_hidden2=2
     args.n_hidden3=4
     args.lrate=0.01
-    args.activation1="sigmoid"
+    args.activation0="sigmoid"
     args.activation2="tanh"
     execute_exp(args)
     args.exp=8
     args.n_hidden1=4
     args.n_hidden2=2
     args.n_hidden3=4
-    activation0="tanh"
+    args.activation0="tanh"
     args.activation2="tanh"
     execute_exp(args)
     args.exp=9
     args.n_hidden1=8
     args.n_hidden2=4
     args.n_hidden3=2
-    activation0="tanh"
+    args.activation0="tanh"
     args.activation2="tanh"
     args.lrate='0.1'
     execute_exp(args)
-    sys.exit()
-    args.exp=8
-    n_hidden1=16
-    n_hidden2=8
-    n_hidden3=4
-    execute_exp(args)
-    args.exp=9
-    args.n_hidden1=8
-    args.n_hidden2=4
-    args.n_hidden3=2
-    execute_exp(args)
+
+
