@@ -156,16 +156,15 @@ if __name__ == "__main__":
     args.lrate=0.001
     execute_exp(args)
     args.exp=4
-    args.activation1="tanh"
-    args.activation2="sigmoid"
+    args.lrate=0.001
     args.lrate=0.01
     args.n_hidden=32
     execute_exp(args)
     args.exp=5
-    args.activation1='tanh'
+    args.activation2='sigmoid'
     execute_exp(args)
     args.exp=6
-    args.activation1='relu'
+    args.activation1=
     execute_exp(args)
     args.exp=7
     args.lrate=0.1
