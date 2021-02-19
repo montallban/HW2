@@ -68,7 +68,7 @@ def execute_exp(args):
     #checkpoint_cb = keras.callbacks.ModelCheckpoint("xor_model.h5",
     #                                                save_best_only=True)
 
-    early_stopping_cb = keras.callbacks.EarlyStopping(patience=50,
+    early_stopping_cb = keras.callbacks.EarlyStopping(patience=1000,
                                                  restore_best_weights=True,
                                                  min_delta=.00001)
 
@@ -79,7 +79,7 @@ def execute_exp(args):
    
     # predict and save as csv
     predictions = model.predict(np.asarray(ins))    
-    np.savetxt('predictions_{}'.format(args.exp),predictions,delimiter=',')
+    np.savetxt('predictions_{}.csv'.format(args.exp),predictions,delimiter=',')
 
     # Save the training history
     fname = "bool_exp_%02d.pkl"%(args.exp)
@@ -149,14 +149,11 @@ if __name__ == "__main__":
     args.exp=0
     execute_exp(args)
     args.exp=1
-    args.activation1='elu'
-    args.activation2='sigmoid'
+    sys.exit()
     n_hidden=8
     execute_exp(args)
     args.exp=2
     args.lrate=0.001
-    args.activation1="tanh"
-    args.activation2="sigmoid"
     execute_exp(args)
     args.exp=4
     args.activation1="tanh"
