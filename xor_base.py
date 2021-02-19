@@ -127,8 +127,8 @@ def create_parser():
     parser = argparse.ArgumentParser(description='XOR Learner')
     parser.add_argument('--exp', type=int, default=0, help='Experiment index')
     parser.add_argument('--lrate', type=float, default=0.01, help='Learning Rate')
-    parser.add_argument('--activation', type=str, default='elu', help='Activation Function')
-    parser.add_argument('--n_hidden', type=int, default=2, help='Number of hidden units')
+    parser.add_argument('--activation', type=str, default='sigmoid', help='Activation Function')
+    parser.add_argument('--n_hidden', type=int, default=16, help='Number of hidden units')
     parser.add_argument('--epochs', type=int, default=100, help='Number of epochs')
 
     return parser
