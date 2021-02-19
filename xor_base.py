@@ -129,7 +129,7 @@ def create_parser():
     parser.add_argument('--lrate', type=float, default=0.01, help='Learning Rate')
     parser.add_argument('--activation', type=str, default='sigmoid', help='Activation Function')
     parser.add_argument('--n_hidden', type=int, default=16, help='Number of hidden units')
-    parser.add_argument('--epochs', type=int, default=100, help='Number of epochs')
+    parser.add_argument('--epochs', type=int, default=10000, help='Number of epochs')
 
     return parser
 

@@ -11,7 +11,7 @@
 #SBATCH --mail-user=michael.montalbano@ou.edu	
 #SBATCH --job-name=xor_test
 #SBATCH --mail-type=ALL
-#SBATCH --chdir=/home/mcmontalbano
+#SBATCH --chdir=/home/mcmontalbano/AML
 #
 #################################################
 # Do not change this line unless you have your own python/tensorflow/keras set up
