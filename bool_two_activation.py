@@ -6,7 +6,6 @@ from tensorflow import keras
 import os
 import time
 import re
-import sys
 
 import argparse
 import pickle
@@ -18,9 +17,6 @@ fp = open("/home/mcmontalbano/AML/hw1_dataset.pkl", "rb")
 foo = pickle.load(fp)
 fp.close()
 
-ins = foo["ins"] # grab inputs
-outs = foo["outs"]
-
 #################################################################
 # Default plotting parameters
 FONTSIZE = 18
@@ -28,7 +24,7 @@ plt.rcParams['figure.figsize'] = (10, 6)
 plt.rcParams['font.size'] = FONTSIZE
 
 #################################################################
-def build_model(n_inputs, n_hidden1, n_hidden2,n_hidden3, n_output, activation1='elu',activation2='elu',lrate=0.001):
+def build_model(n_inputs, n_hidden, n_output, activation1='elu',activation2='elu',lrate=0.001):
     '''
     Construct a network with one hidden layer
     - Adam optimizer
@@ -36,12 +32,10 @@ def build_model(n_inputs, n_hidden1, n_hidden2,n_hidden3, n_output, activation1=
     '''
     model = Sequential();
     model.add(InputLayer(input_shape=(n_inputs,)))
-    model.add(Dense(n_hidden1, use_bias=True, name="hidden1", activation=activation1))
-    model.add(Dense(n_hidden2, use_bias=True, name="hidden2", activation=activation1))
-    model.add(Dense(n_hidden3, use_bias=True, name="hidden3", activation=activation1))
+    model.add(Dense(n_hidden, use_bias=True, name="hidden", activation=activation1))
     model.add(Dense(n_output, use_bias=True, name="output", activation=activation2))
     
-    # Optiemizer
+    # Optimizer
     opt = tf.keras.optimizers.Adam(lr=lrate, beta_1=0.9, beta_2=0.999,
                                 epsilon=None, decay=0.0, amsgrad=False)
     
@@ -63,14 +57,17 @@ def execute_exp(args):
     ##############################
     # Run the experiment
     # Create training set: XOR
-    model = build_model(ins.shape[1], args.n_hidden1, args.n_hidden2, args.n_hidden3, outs.shape[1], activation1=args.activation1,
+    ins = foo["ins"] # grab inputs 
+    outs = foo["outs"]
+    
+    model = build_model(ins.shape[1], args.n_hidden, outs.shape[1], activation1=args.activation1,
                        activation2=args.activation2, lrate=args.lrate)
 
     # Callbacks
     #checkpoint_cb = keras.callbacks.ModelCheckpoint("xor_model.h5",
     #                                                save_best_only=True)
 
-    early_stopping_cb = keras.callbacks.EarlyStopping(patience=1000,
+    early_stopping_cb = keras.callbacks.EarlyStopping(patience=100,
                                                  restore_best_weights=True,
                                                  min_delta=.00001)
 
@@ -78,17 +75,12 @@ def execute_exp(args):
     history = model.fit(x=ins, y=outs, epochs=args.epochs, verbose=False,
                         validation_data=(ins, outs),
                         callbacks=[early_stopping_cb])
-   
-    # predict and save as csv
-    predictions = model.predict(np.asarray(ins))    
-    np.savetxt('predictions_{}.csv'.format(args.exp),predictions,delimiter=',')
 
     # Save the training history
     fname = "bool_exp_%02d.pkl"%(args.exp)
     fp = open(fname, "wb")
     pickle.dump(history.history, fp)
     fp.close()
-
 
 def display_learning_curve(exp):
     '''
@@ -133,16 +125,14 @@ def create_parser():
     '''
     Create a parser for the XOR experiment
     '''
-    parser = argparse.ArgumentParser(description='Bool learner')
+    parser = argparse.ArgumentParser(description='XOR Learner')
     parser.add_argument('--exp', type=int, default=0, help='Experiment index')
     parser.add_argument('--lrate', type=float, default=0.01, help='Learning Rate')
-    parser.add_argument('--activation0', type=str, default='elu',help='Activation Function0')
     parser.add_argument('--activation1', type=str, default='elu',help='Activation Function1')
     parser.add_argument('--activation2', type=str, default='elu',help='Activation Function2')
-    parser.add_argument('--n_hidden1', type=int, default=8, help='Number of hidden units')
-    parser.add_argument('--n_hidden2', type=int, default=8, help='Number of hidden units')
-    parser.add_argument('--n_hidden3', type=int, default=8, help='Number of hidden units in layer 3')
+    parser.add_argument('--n_hidden', type=int, default=16, help='Number of hidden units')
     parser.add_argument('--epochs', type=int, default=10000, help='Number of epochs')
+
     return parser
 
 if __name__ == "__main__":
@@ -151,30 +141,46 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # Do the work
-    args.exp=6
-    
- #   args.n_hidden1=8
- #   args.n_hidden2=4
-  #  args.n_hidden3=2
-   # activation0="tanh"
-    #args.activation2="tanh"
-   # execute_exp(args)
-    args.exp=7
-    args.n_hidden1=4
-    args.n_hidden2=2
-    args.n_hidden3=4
-    args.lrate=0.01
-    args.activation1="sigmoid"
-    args.activation2="tanh"
     execute_exp(args)
-    sys.exit()
+    args.exp=4
+    args.activation1='elu'
+    execute_exp(args)
+    args.exp=5
+    args.activation1='tanh'
+    execute_exp(args)
+    args.exp=6
+    args.activation1='relu'
+    execute_exp(args)
+    args.exp=7
+    args.lrate=0.1
+    execute_exp(args)
     args.exp=8
-    n_hidden1=16
-    n_hidden2=8
-    n_hidden3=4
+    args.activation1='tanh'
+    args.activation2='sigmoid'
     execute_exp(args)
     args.exp=9
-    args.n_hidden1=8
-    args.n_hidden2=4
-    args.n_hidden3=2
+    args.n_hidden=2
+    args.activation1="tanh"
+    args.activation2="sigmoid"
     execute_exp(args)
+    args.exp=10
+    args.lrate=0.1
+    args.activation1="tanh"
+    args.activation2="sigmoid"
+    execute_exp(args)
+    args.exp=11
+    args.lrate=0.01
+    args.activation1="tanh"
+    args.activation2="sigmoid"
+    args.n_hidden=4
+    execute_exp(args)
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
