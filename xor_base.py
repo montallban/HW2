@@ -57,8 +57,8 @@ def execute_exp(args):
     ##############################
     # Run the experiment
     # Create training set: XOR
-    ins = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
-    outs = np.array([[0], [1], [1], [0]])
+    ins = foo["ins"] # grab inputs 
+    outs = foo["outs"]
     
     model = build_model(ins.shape[1], args.n_hidden, outs.shape[1], activation=args.activation,
                        lrate=args.lrate)
@@ -93,9 +93,12 @@ def display_learning_curve(fname):
     fp.close()
     
     # Display
+    f = plt.figure()
     plt.plot(history['loss'])
     plt.ylabel('MSE')
     plt.xlabel('epochs')
+    plt.show()
+    f.savefig("exp.pdf", bbox_inches='tight')
 
 def display_learning_curve_set(base):
     '''
@@ -137,3 +140,4 @@ if __name__ == "__main__":
 
     # Do the work
     execute_exp(args)
+    display_learning_curve("bool_exp_00.pkl")
