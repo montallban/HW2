@@ -32,8 +32,8 @@ def build_model(n_inputs, n_hidden, n_output, activation='elu', lrate=0.001):
     '''
     model = Sequential();
     model.add(InputLayer(input_shape=(n_inputs,)))
-    model.add(Dense(n_hidden, use_bias=True, name="hidden", activation=activation))
-    model.add(Dense(n_output, use_bias=True, name="output", activation=activation))
+    model.add(Dense(n_hidden, use_bias=True, name="hidden", activation=activation1))
+    model.add(Dense(n_output, use_bias=True, name="output", activation=activation2))
     
     # Optimizer
     opt = tf.keras.optimizers.Adam(lr=lrate, beta_1=0.9, beta_2=0.999,
@@ -67,7 +67,7 @@ def execute_exp(args):
     #checkpoint_cb = keras.callbacks.ModelCheckpoint("xor_model.h5",
     #                                                save_best_only=True)
 
-    early_stopping_cb = keras.callbacks.EarlyStopping(patience=10000,
+    early_stopping_cb = keras.callbacks.EarlyStopping(patience=100,
                                                  restore_best_weights=True,
                                                  min_delta=.00001)
 
@@ -128,7 +128,8 @@ def create_parser():
     parser = argparse.ArgumentParser(description='XOR Learner')
     parser.add_argument('--exp', type=int, default=0, help='Experiment index')
     parser.add_argument('--lrate', type=float, default=0.01, help='Learning Rate')
-    parser.add_argument('--activation', type=str, default='elu',help='Activation Function')
+    parser.add_argument('--activation1', type=str, default='elu',help='Activation Function1')
+    parser.add_argument('--activation2', type=str, default='elu',help='Activation Function2')
     parser.add_argument('--n_hidden', type=int, default=16, help='Number of hidden units')
     parser.add_argument('--epochs', type=int, default=10000, help='Number of epochs')
 
@@ -141,17 +142,38 @@ if __name__ == "__main__":
 
     # Do the work
     execute_exp(args)
-    args.exp=1
-    args.activation='elu'
+    args.exp=4
+    args.activation1='elu'
     execute_exp(args)
-    args.exp=2
-    args.activation='tanh'
+    args.exp=5
+    args.activation1='tanh'
     execute_exp(args)
-    args.exp=3
-    args.activation='relu'
+    args.exp=6
+    args.activation1='relu'
     execute_exp(args)
-    display_learning_curve_set("bool_exp")
-    
+    args.exp=7
+    args.lrate=0.1
+    execute_exp(args)
+    args.exp=8
+    args.activation1='tanh'
+    args.activation2='sigmoid'
+    execute_exp(args)
+    args.exp=9
+    args.n_hidden=2
+    args.activation1="tanh"
+    args.activation2="sigmoid"
+    execute_exp(args)
+    args.exp=10
+    args.lrate=0.1
+    args.activation1="tanh"
+    args.activation2="sigmoid"
+    execute_exp(args)
+    args.exp=11
+    args.lrate=0.01
+    args.activation1="tanh"
+    args.activation2="sigmoid"
+    args.n_hidden=4
+    execute_exp(args)
     
     
     
