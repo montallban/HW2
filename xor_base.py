@@ -25,7 +25,7 @@ plt.rcParams['figure.figsize'] = (10, 6)
 plt.rcParams['font.size'] = FONTSIZE
 
 #################################################################
-def build_model(n_inputs, n_hidden, n_output, activation1='elu',activation2='elu',lrate=0.001):
+def build_model(n_inputs, n_hidden1, n_hidden2,n_hidden3, n_output, activation1='elu',activation2='elu',lrate=0.001):
     '''
     Construct a network with one hidden layer
     - Adam optimizer
@@ -33,10 +33,12 @@ def build_model(n_inputs, n_hidden, n_output, activation1='elu',activation2='elu
     '''
     model = Sequential();
     model.add(InputLayer(input_shape=(n_inputs,)))
-    model.add(Dense(n_hidden, use_bias=True, name="hidden", activation=activation1))
+    model.add(Dense(n_hidden1, use_bias=True, name="hidden1", activation=activation1))
+    model.add(Dense(n_hidden2, use_bias=True, name="hidden2", activation=activation1))
+    model.add(Dense(n_hidden3, use_bias=True, name="hidden3", activation=activation1))
     model.add(Dense(n_output, use_bias=True, name="output", activation=activation2))
     
-    # Optimizer
+    # Optiemizer
     opt = tf.keras.optimizers.Adam(lr=lrate, beta_1=0.9, beta_2=0.999,
                                 epsilon=None, decay=0.0, amsgrad=False)
     
@@ -61,7 +63,7 @@ def execute_exp(args):
     ins = foo["ins"] # grab inputs 
     outs = foo["outs"]
     
-    model = build_model(ins.shape[1], args.n_hidden, outs.shape[1], activation1=args.activation1,
+    model = build_model(ins.shape[1], args.n_hidden1, args.n_hidden2, args.n_hidden3, outs.shape[1], activation1=args.activation1,
                        activation2=args.activation2, lrate=args.lrate)
 
     # Callbacks
@@ -136,7 +138,9 @@ def create_parser():
     parser.add_argument('--lrate', type=float, default=0.01, help='Learning Rate')
     parser.add_argument('--activation1', type=str, default='elu',help='Activation Function1')
     parser.add_argument('--activation2', type=str, default='elu',help='Activation Function2')
-    parser.add_argument('--n_hidden', type=int, default=16, help='Number of hidden units')
+    parser.add_argument('--n_hidden1', type=int, default=8, help='Number of hidden units')
+    parser.add_argument('--n_hidden2', type=int, default=8, help='Number of hidden units')
+    parser.add_argument('--n_hidden3', type=int, default=8, help='Number of hidden units in layer 3')
     parser.add_argument('--epochs', type=int, default=10000, help='Number of epochs')
     return parser
 
@@ -146,51 +150,27 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # Do the work
-    args.exp=0
-    execute_exp(args)
-    args.exp=1
-    sys.exit()
-    n_hidden=8
-    execute_exp(args)
-    args.exp=2
-    args.lrate=0.001
-    execute_exp(args)
-    args.exp=4
-    args.lrate=0.001
-    args.lrate=0.01
-    args.n_hidden=32
-    execute_exp(args)
-    args.exp=5
-    args.activation2='sigmoid'
-    execute_exp(args)
     args.exp=6
-    args.activation1=
+    n_hidden1=8
+    n_hidden2=4
+    n_hidden3=2
     execute_exp(args)
     args.exp=7
-    args.lrate=0.1
+    n_hidden1=4
+    n_hidden2=2
+    n_hidden3=4
+    args.lrate=0.01
     execute_exp(args)
     args.exp=8
-    args.activation1='tanh'
-    args.activation2='sigmoid'
+    n_hidden1=16
+    n_hidden2=8
+    n_hidden3=4
     execute_exp(args)
     args.exp=9
-    args.n_hidden=2
-    args.activation1="tanh"
-    args.activation2="sigmoid"
-    execute_exp(args)
-    args.exp=10
-    args.lrate=0.1
-    args.activation1="tanh"
-    args.activation2="sigmoid"
-    execute_exp(args)
-    args.exp=11
-    args.lrate=0.01
-    args.activation1="tanh"
-    args.activation2="sigmoid"
-    args.n_hidden=4
+    args.n_hidden1=8
+    args.n_hidden2=4
+    args.n_hidden3=2
     execute_exp(args)  
-    
-    
     
     
     
