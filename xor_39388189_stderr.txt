@@ -1,4 +1,0 @@
-  File "xor_base.py", line 173
-    args.exp=6
-    ^
-IndentationError: unexpected indent

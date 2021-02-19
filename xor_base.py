@@ -18,6 +18,9 @@ fp = open("/home/mcmontalbano/AML/hw1_dataset.pkl", "rb")
 foo = pickle.load(fp)
 fp.close()
 
+ins = foo["ins"] # grab inputs
+outs = foo["outs"]
+
 #################################################################
 # Default plotting parameters
 FONTSIZE = 18
@@ -60,9 +63,6 @@ def execute_exp(args):
     ##############################
     # Run the experiment
     # Create training set: XOR
-    ins = foo["ins"] # grab inputs 
-    outs = foo["outs"]
-    
     model = build_model(ins.shape[1], args.n_hidden1, args.n_hidden2, args.n_hidden3, outs.shape[1], activation1=args.activation1,
                        activation2=args.activation2, lrate=args.lrate)
 
@@ -136,6 +136,7 @@ def create_parser():
     parser = argparse.ArgumentParser(description='Bool learner')
     parser.add_argument('--exp', type=int, default=0, help='Experiment index')
     parser.add_argument('--lrate', type=float, default=0.01, help='Learning Rate')
+    parser.add_argument('--activation0', type=str, default='elu',help='Activation Function0')
     parser.add_argument('--activation1', type=str, default='elu',help='Activation Function1')
     parser.add_argument('--activation2', type=str, default='elu',help='Activation Function2')
     parser.add_argument('--n_hidden1', type=int, default=8, help='Number of hidden units')
@@ -151,16 +152,22 @@ if __name__ == "__main__":
 
     # Do the work
     args.exp=6
-    n_hidden1=8
-    n_hidden2=4
-    n_hidden3=2
-    execute_exp(args)
+    
+ #   args.n_hidden1=8
+ #   args.n_hidden2=4
+  #  args.n_hidden3=2
+   # activation0="tanh"
+    #args.activation2="tanh"
+   # execute_exp(args)
     args.exp=7
-    n_hidden1=4
-    n_hidden2=2
-    n_hidden3=4
+    args.n_hidden1=4
+    args.n_hidden2=2
+    args.n_hidden3=4
     args.lrate=0.01
+    args.activation1="sigmoid"
+    args.activation2="tanh"
     execute_exp(args)
+    sys.exit()
     args.exp=8
     n_hidden1=16
     n_hidden2=8

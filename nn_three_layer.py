@@ -18,6 +18,14 @@ fp = open("/home/mcmontalbano/AML/hw1_dataset.pkl", "rb")
 foo = pickle.load(fp)
 fp.close()
 
+ins = foo["ins"] # grab inputs
+outs = foo["outs"]
+for idx, i in enumerate(ins):
+    if i < 0:
+        ins[idx] = 0
+    else:
+        ins[idx] = 1
+
 #################################################################
 # Default plotting parameters
 FONTSIZE = 18
@@ -60,9 +68,6 @@ def execute_exp(args):
     ##############################
     # Run the experiment
     # Create training set: XOR
-    ins = foo["ins"] # grab inputs 
-    outs = foo["outs"]
-    
     model = build_model(ins.shape[1], args.n_hidden1, args.n_hidden2, args.n_hidden3, outs.shape[1], activation1=args.activation1,
                        activation2=args.activation2, lrate=args.lrate)
 

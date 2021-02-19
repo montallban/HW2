@@ -1,4 +1,0 @@
-  File "xor_base.py", line 167
-    args.activation1=
-                    ^
-SyntaxError: invalid syntax

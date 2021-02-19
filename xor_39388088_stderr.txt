@@ -1,4 +1,0 @@
-  File "xor_base.py", line 175
-    n_hidden3=
-             ^
-SyntaxError: invalid syntax
