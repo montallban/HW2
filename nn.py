@@ -28,7 +28,7 @@ plt.rcParams['figure.figsize'] = (10, 6)
 plt.rcParams['font.size'] = FONTSIZE
 
 #################################################################
-def build_model(n_inputs, n_hidden1, n_hidden2,n_hidden3, n_output, activation1='elu',activation2='elu',lrate=0.001):
+def build_model(n_inputs, n_hidden1, n_hidden2,n_hidden3, n_output, activation0,activation1='elu',activation2='elu',lrate=0.001):
     '''
     Construct a network with one hidden layer
     - Adam optimizer
@@ -36,7 +36,7 @@ def build_model(n_inputs, n_hidden1, n_hidden2,n_hidden3, n_output, activation1=
     '''
     model = Sequential();
     model.add(InputLayer(input_shape=(n_inputs,)))
-    model.add(Dense(n_hidden1, use_bias=True, name="hidden1", activation=activation1))
+    model.add(Dense(n_hidden1, use_bias=True, name="hidden1", activation=activation0))
     model.add(Dense(n_hidden2, use_bias=True, name="hidden2", activation=activation1))
     model.add(Dense(n_hidden3, use_bias=True, name="hidden3", activation=activation1))
     model.add(Dense(n_output, use_bias=True, name="output", activation=activation2))
@@ -63,8 +63,8 @@ def execute_exp(args):
     ##############################
     # Run the experiment
     # Create training set: XOR
-    model = build_model(ins.shape[1], args.n_hidden1, args.n_hidden2, args.n_hidden3, outs.shape[1], activation1=args.activation1,
-                       activation2=args.activation2, lrate=args.lrate)
+    model = build_model(ins.shape[1], args.n_hidden1, args.n_hidden2, args.n_hidden3, outs.shape[1], activation0=args.activation0,
+                        activation1=args.activation1,activation2=args.activation2, lrate=args.lrate)
 
     # Callbacks
     #checkpoint_cb = keras.callbacks.ModelCheckpoint("xor_model.h5",
