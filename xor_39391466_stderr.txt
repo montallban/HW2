@@ -1,0 +1,4 @@
+  File "nn_1.py", line 181
+    <<<<<<< HEAD
+     ^
+SyntaxError: invalid syntax
