@@ -150,68 +150,97 @@ if __name__ == "__main__":
     parser = create_parser()
     args = parser.parse_args()
 
-    # exp 1
-    # args.exp=1
-    # args.n_hidden1=8
-    # args.n_hidden2=4
-    # args.n_hidden3=2
-    # args.activation0="tf.nn.relu"
-    # args.activation2="tanh"
-    # execute_exp(args)
-    # args.exp=2
-    # args.n_hidden1=32
-    # args.n_hidden2=16
-    # args.n_hidden3=8
-    # args.activation0="tanh"
-    # args.activation2="tanh"
-    # execute_exp(args)
-
-    # args.exp=3
-    # args.n_hidden1=8
-    # args.n_hidden2=4
-    # args.n_hidden3=2
-    # args.activation0="tanh"
-    # args.activation1="elu"
-    # args.activation2="tanh"
-    # execute_exp(args)
-
-    args.exp=4
-    args.n_hidden1=8
-    args.n_hidden2=4
-<<<<<<< HEAD
-=======
-    args.n_hidden3=2
+    #exp 1
+    args.exp=1
+    args.n_hidden1=45
+    args.n_hidden2=45
+    args.n_hidden3=45
     args.activation0="tanh"
     args.activation2="tanh"
     execute_exp(args)
+
+    parser = create_parser()
+    args = parser.parse_args()
+
     args.exp=2
     args.n_hidden1=32
     args.n_hidden2=16
->>>>>>> e6fe5e0902d10cb10d13077a2638bfdcf8b4dfe3
     args.n_hidden3=8
     args.activation0="tanh"
+    args.activation2="tanh"
+    execute_exp(args)
+
+
+    parser = create_parser()
+    args = parser.parse_args()
+
+    args.exp=3
+    args.n_hidden1=16
+    args.n_hidden2=8
+    args.n_hidden3=4
+    args.activation0="tanh"
+    args.activation1="elu"
     args.activation2="tanh"
     args.epochs=10000
     execute_exp(args)
 
-<<<<<<< HEAD
+
     parser = create_parser()
     args = parser.parse_args()
-=======
-    args.exp=3
-    args.n_hidden1=8
-    args.n_hidden2=4
-    args.n_hidden3=2
+
+    args.exp=4
+    args.n_hidden1=32
+    args.n_hidden2=2
+    args.n_hidden3=32
     args.activation0="tanh"
-    args.activation1="sigmoid"
     args.activation2="tanh"
     execute_exp(args)
->>>>>>> e6fe5e0902d10cb10d13077a2638bfdcf8b4dfe3
+  
+
+    parser = create_parser()
+    args = parser.parse_args()
 
     args.exp=5
-    args.n_hidden1=100
+    args.n_hidden1=1
+    args.n_hidden2=64
+    args.n_hidden3=32
+    args.activation0="tanh"
+    args.activation2="tanh"
+    execute_exp(args)
+
+
+    parser = create_parser()
+    args = parser.parse_args()
+
+    args.exp=6
+    args.n_hidden1=10
     args.n_hidden2=100
-    args.n_hidden3=50
+    args.n_hidden3=10
+    args.activation0="tanh"
+    args.activation2="tanh"
+    execute_exp(args)
+
+
+    parser = create_parser()
+    args = parser.parse_args()
+
+    args.exp=7
+    args.n_hidden1=16
+    args.n_hidden2=8
+    args.n_hidden3=4
+    args.lrate=0.001
+    args.activation0="tanh"
+    args.activation2="tanh"
+    args.epochs=100000
+    execute_exp(args)
+
+    parser = create_parser()
+    args = parser.parse_args()
+
+    args.exp=8
+    args.n_hidden1=8
+    args.n_hidden2=16
+    args.n_hidden3=32
     args.activation0="tanh"
     args.activation2="tanh"
     execute_exp(args)
@@ -219,35 +248,14 @@ if __name__ == "__main__":
     parser = create_parser()
     args = parser.parse_args()
 
-    # args.exp=6
-    # args.n_hidden1=8
-    # args.n_hidden2=4
-    # args.n_hidden3=2
-    # args.activation0="tanh"
-    # args.activation2="tanh"
-    # execute_exp(args)
-    # args.exp=7
-    # args.n_hidden1=4
-    # args.n_hidden2=2
-    # args.n_hidden3=4
-    # args.lrate=0.01
-    # args.activation0="sigmoid"
-    # args.activation2="tanh"
-    # execute_exp(args)
-    # args.exp=8
-    # args.n_hidden1=4
-    # args.n_hidden2=2
-    # args.n_hidden3=4
-    # args.activation0="tanh"
-    # args.activation2="tanh"
-    # execute_exp(args)
     args.exp=9
-    args.n_hidden1=8
-    args.n_hidden2=4
+    args.n_hidden1=32
+    args.n_hidden2=16
     args.n_hidden3=2
     args.activation0="tanh"
     args.activation2="tanh"
-    args.lrate=0.1
+    args.lrate=0.001
+    args.epochs=100000
     execute_exp(args)
 
 
