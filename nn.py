@@ -155,7 +155,7 @@ if __name__ == "__main__":
     args.n_hidden1=8
     args.n_hidden2=4
     args.n_hidden3=2
-    args.activation0="tf.nn.relu"
+    args.activation0="tanh"
     args.activation2="tanh"
     execute_exp(args)
     args.exp=2
@@ -171,7 +171,7 @@ if __name__ == "__main__":
     args.n_hidden2=4
     args.n_hidden3=2
     args.activation0="tanh"
-    args.activation1="tf.nn.relu"
+    args.activation1="sigmoid"
     args.activation2="tanh"
     execute_exp(args)
 
