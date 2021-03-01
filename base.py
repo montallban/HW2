@@ -160,7 +160,7 @@ def deep_network_basic(in_n, hidden, out_n, hidden_activation, output_activation
                                 epsilon=None, decay=0.0, amsgrad=False)
     
     # Bind the optimizer and the loss function to the model
-    model.compile(loss='mse', optimizer=opt, metrics=["mae"])
+    model.compile(loss='mse', optimizer=opt, metrics=metrics_)
     
     # Generate an ASCII representation of the architecture
     print(model.summary())
