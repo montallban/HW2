@@ -12,7 +12,7 @@
 #SBATCH --job-name=bmi_test
 #SBATCH --mail-user=michael.montalbano@ou.edu
 #SBATCH --mail-type=ALL
-#SBATCH --chdir=/home/mcmontalbano/homework2/HW2
+#SBATCH --chdir=/home/mcmontalbano/homework2/HW2/HW2
 #
 #################################################
 # Do not change this line unless you have your own python/tensorflow/keras set up
