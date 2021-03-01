@@ -151,8 +151,8 @@ def deep_network_basic(in_n, hidden, out_n, hidden_activation, output_activation
 
     # Input layer
     model.add(InputLayer(input_shape=(in_n,)))
-    for layer_n in hidden:
-        model.add(Dense(layer_n, use_bias=True, name="hidden1", activation=hidden_activation))
+    #for layer_n in hidden:
+    #    model.add(Dense(layer_n, use_bias=True, name="hidden1", activation=hidden_activation))
     model.add(Dense(out_n, use_bias=True, name="hidden2", activation=output_activation))
     
     # Optiemizer
