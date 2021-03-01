@@ -215,8 +215,8 @@ def execute_exp(args=None):
 
     # Build the model: you are responsible for providing this function
     model = deep_network_basic(ins.shape[1], tuple(args.hidden), outs.shape[1],     # Size of inputs, hidden layer(s) and outputs
-                               activation='elu',
-                              activation_out='tanh',
+                               hidden_activation='elu',
+                              output_activation='tanh',
                               lrate=args.lrate,
                               metrics=[fvaf, rmse])
     
