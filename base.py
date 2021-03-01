@@ -4,7 +4,6 @@ Modified by: Alan Lee
 '''
 
 from symbiotic_metrics import *
-from deep_networks import *
 from job_control import *
 import pickle
 import argparse
