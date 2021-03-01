@@ -147,7 +147,7 @@ def generate_fname(args, params_str):
 
 def deep_network_basic(in_n, hidden, out_n, hidden_activation, output_activation, lrate, metrics_):
     # This is what we need to build
-
+    print(metrics_)
     model = Sequential();
 
     # Input layer
@@ -220,7 +220,7 @@ def execute_exp(args=None):
                                hidden_activation='elu',
                               output_activation='tanh',
                               lrate=args.lrate,
-                              metrics=["fvaf", "rmse"])
+                              metrics_=["fvaf", "rmse"])
     
     # Report if verbosity is turned on
     if args.verbose >= 1:
