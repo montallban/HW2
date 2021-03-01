@@ -249,7 +249,7 @@ def create_parser():
     parser = argparse.ArgumentParser(description='BMI Learner')
     parser.add_argument('-rotation', type=int, default=0, help='Cross-validation rotation')
     parser.add_argument('-epochs', type=int, default=100, help='Training epochs')
-    parser.add_argument('-dataset', type=str, default='bmi_dataset.pkl', help='Data set file')
+    parser.add_argument('-dataset', type=str, default='../datasets/bmi_dataset.pkl', help='Data set file')
     parser.add_argument('-Ntraining', type=int, default=2, help='Number of training folds')
     parser.add_argument('-output_type', type=str, default='torque', help='Type to predict')
     parser.add_argument('-exp_index', type=int, default=-1, help='Experiment index')
