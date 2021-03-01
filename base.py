@@ -145,7 +145,7 @@ def generate_fname(args, params_str):
     # Put it all together, including #of training folds and the experiment rotation
     return "%s/%s_%s_hidden_%s_%s"%(args.results_path, args.exp_type, predict_str, hidden_str, params_str)
 
-def deep_network_basic(in_n, hidden, out_n, hidden_activation, output_activation, lrate, metrics):
+def deep_network_basic(in_n, hidden, out_n, hidden_activation, output_activation, lrate, metrics_):
     # This is what we need to build
 
     model = Sequential();
@@ -161,7 +161,7 @@ def deep_network_basic(in_n, hidden, out_n, hidden_activation, output_activation
                                 epsilon=None, decay=0.0, amsgrad=False)
     
     # Bind the optimizer and the loss function to the model
-    model.compile(loss='mse', optimizer=opt, metrics=metrics)
+    model.compile(loss='mse', optimizer=opt, metrics=metrics_)
     
     # Generate an ASCII representation of the architecture
     print(model.summary())
@@ -220,7 +220,7 @@ def execute_exp(args=None):
                                hidden_activation='elu',
                               output_activation='tanh',
                               lrate=args.lrate,
-                              metrics=[fvaf, rmse])
+                              metrics=["fvaf", "rmse"])
     
     # Report if verbosity is turned on
     if args.verbose >= 1:
