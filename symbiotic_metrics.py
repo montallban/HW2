@@ -116,4 +116,4 @@ class FractionOfVarianceAccountedFor(keras.metrics.Metric):
         
     def get_config(self):
         base_config = super().get_config()
-        return {**base_config, "ndims": self.ndims}
+        return [**base_config, "ndims": self.ndims]
