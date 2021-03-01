@@ -114,6 +114,7 @@ class FractionOfVarianceAccountedFor(keras.metrics.Metric):
         self.sum.assign(tf.zeros(shape=(self.ndims), dtype=tf.float64))
         self.sum_squared_errors.assign(tf.zeros(shape=(self.ndims), dtype=tf.float64))
         
-#    def get_config(self):
-#        base_config = super().get_config()
-#        return [**base_config, "ndims": self.ndims]
+    def get_config(self):
+        base_config = super().get_config()
+        return {**base_config, "ndims": self.ndims}
+
