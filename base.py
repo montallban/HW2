@@ -145,15 +145,15 @@ def generate_fname(args, params_str):
     # Put it all together, including #of training folds and the experiment rotation
     return "%s/%s_%s_hidden_%s_%s"%(args.results_path, args.exp_type, predict_str, hidden_str, params_str)
 
-def deep_network_basic(in_n, hidden_n, out_n, activation, activation_out, lrate, metrics):
+def deep_network_basic(in_n, hidden_n, out_n, hidden_activation, output_activation, lrate, metrics):
     # This is what we need to build
 
     model = Sequential();
 
     # Input layer
-    model.add(InputLayer(input_shape=(in_dim,)))
-    model.add(Dense(hidden_n, use_bias=True, name="hidden1", activation=activation_hidden))
-    model.add(Dense(out_n, use_bias=True, name="hidden2", activation=activation_out))
+    model.add(InputLayer(input_shape=(in_n,)))
+    model.add(Dense(hidden_n, use_bias=True, name="hidden1", activation=hidden_activation))
+    model.add(Dense(out_n, use_bias=True, name="hidden2", activation=output_activation))
     
     # Optiemizer
     opt = tf.keras.optimizers.Adam(lr=lrate, beta_1=0.9, beta_2=0.999,
