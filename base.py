@@ -214,6 +214,7 @@ def execute_exp(args=None):
     rmse = tf.keras.metrics.RootMeanSquaredError()
 
     # Build the model: you are responsible for providing this function
+    print(ins.shape[1])
     model = deep_network_basic(ins.shape[1], tuple(args.hidden), outs.shape[1],     # Size of inputs, hidden layer(s) and outputs
                                hidden_activation='elu',
                               output_activation='tanh',
