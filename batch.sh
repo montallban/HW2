@@ -7,7 +7,7 @@
 # memory in MB
 #SBATCH --mem=1024
 #SBATCH --output=results/test_%J_out.txt
-#SBATCH --error=results/testing_%J_err.txt
+#SBATCH --error=results/testerr_%J.txt
 #SBATCH --time=00:00:05
 #SBATCH --job-name=bmi_test
 #SBATCH --mail-user=michael.montalbano@ou.edu
