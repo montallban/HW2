@@ -220,7 +220,7 @@ def execute_exp(args=None):
                                hidden_activation='elu',
                               output_activation='tanh',
                               lrate=args.lrate,
-                              metrics_=["fvaf", "rmse"])
+                              metrics_=[fvaf,rmse])
     
     # Report if verbosity is turned on
     if args.verbose >= 1:
