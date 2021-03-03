@@ -1,6 +1,6 @@
 '''
 Author: Andrew H. Fagg
-Modified by: Michael Montalbano
+Modified by: Alan Lee
 '''
 import numpy as np
 from symbiotic_metrics import *
@@ -47,7 +47,6 @@ def extract_data(bmi, args):
     '''
     # Number of folds in the data set
     ins = bmi['MI']
-  
     Nfolds = len(ins)
     
     # Check that argument matches actual number of folds
@@ -146,23 +145,24 @@ def generate_fname(args, params_str):
     # Put it all together, including #of training folds and the experiment rotation
     return "%s/%s_%s_hidden_%s_%s"%(args.results_path, args.exp_type, predict_str, hidden_str, params_str)
 
-def deep_network_basic(in_n, hidden, out_n, hidden_activation, output_activation, lrate, metrics):
+def deep_network_basic(in_n, hidden, out_n, hidden_activation, output_activation, lrate, metrics_):
     # This is what we need to build
     model = Sequential();
 
     # Input layer
     model.add(InputLayer(input_shape=(in_n,)))
     for idx, layer_n in enumerate(hidden):
+        print(layer_n)
         title = "hidden" + str(idx)
         model.add(Dense(layer_n, use_bias=True, name=title, activation=hidden_activation))
-    model.add(Dense(out_n, use_bias=True, name="hidden2", activation=output_activation))
+    model.add(Dense(out_n, use_bias=True, name="output", activation=output_activation))
     
     # Optiemizer
     opt = tf.keras.optimizers.Adam(lr=lrate, beta_1=0.9, beta_2=0.999,
                                 epsilon=None, decay=0.0, amsgrad=False)
     
     # Bind the optimizer and the loss function to the model
-    model.compile(loss='mse', optimizer=opt, metrics=["fvaf","rsme"])
+    model.compile(loss='mse', optimizer=opt, metrics=metrics_)
     
     # Generate an ASCII representation of the architecture
     print(model.summary())
@@ -197,10 +197,10 @@ def execute_exp(args=None):
     print("File name base:", fbase)
     
     # Is this a test run?
-   # if(args.nogo):
+    #if(args.nogo):
         # Don't execute the experiment
     #    print("Test run only")
-     #   return None
+    #    return None
     
     # Load the data
     fp = open(args.dataset, "rb")
@@ -219,9 +219,9 @@ def execute_exp(args=None):
     print(ins.shape[1])
     model = deep_network_basic(ins.shape[1], tuple(args.hidden), outs.shape[1],     # Size of inputs, hidden layer(s) and outputs
                                hidden_activation='elu',
-                              output_activation='tanh',
+                              output_activation='elu',
                               lrate=args.lrate,
-                              metrics=["fvaf","rsme"])
+                              metrics_=[fvaf, rmse])
     
     # Report if verbosity is turned on
     if args.verbose >= 1:
@@ -236,12 +236,7 @@ def execute_exp(args=None):
     history = model.fit(x=ins, y=outs, epochs=args.epochs, verbose=args.verbose>=2,
                         validation_data=(ins_validation, outs_validation), 
                         callbacks=[early_stopping_cb])
-    
-    # predict
-    predictions = model.predict(np.asarray(ins))
-    np.savetxt('predictions.csv', predictions, delimiter=',')
-
-    
+        
     # Generate log data
     results = {}
     results['args'] = args
@@ -275,12 +270,12 @@ def create_parser():
     parser.add_argument('-exp_index', type=int, default=-1, help='Experiment index')
     parser.add_argument('-Nfolds', type=int, default=20, help='Maximum number of folds')
     parser.add_argument('-results_path', type=str, default='./results', help='Results directory')
-    parser.add_argument('-hidden', nargs='+', type=int, default=[100, 5], help='Number of hidden units per layer (sequence of ints)')
+    parser.add_argument('-hidden', nargs='+', type=int, default=[100, 10, 100], help='Number of hidden units per layer (sequence of ints)')
     parser.add_argument('-lrate', type=float, default=0.001, help="Learning rate")
     parser.add_argument('-min_delta', type=float, default=0.0, help="Minimum delta for early termination")
     parser.add_argument('-patience', type=int, default=100, help="Patience for early termination")
     parser.add_argument('-verbose', '-v', action='count', default=0, help="Verbosity level")
-    parser.add_argument('-predict_dim', type=int, default=None, help="Dimension of the output to predict")
+    parser.add_argument('-predict_dim', type=int, default=1, help="Dimension of the output to predict")
     parser.add_argument('-nogo', action='store_true', help='Do not perform the experiment')
     parser.add_argument('-exp_type', type=str, default='bmi', help='High level name for this set of experiments')
     
