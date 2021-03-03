@@ -1,6 +1,6 @@
 '''
 Author: Andrew H. Fagg
-Modified by: Alan Lee
+Modified by: Michael Montalbano
 '''
 import numpy as np
 from symbiotic_metrics import *
@@ -47,6 +47,7 @@ def extract_data(bmi, args):
     '''
     # Number of folds in the data set
     ins = bmi['MI']
+  
     Nfolds = len(ins)
     
     # Check that argument matches actual number of folds
@@ -145,14 +146,13 @@ def generate_fname(args, params_str):
     # Put it all together, including #of training folds and the experiment rotation
     return "%s/%s_%s_hidden_%s_%s"%(args.results_path, args.exp_type, predict_str, hidden_str, params_str)
 
-def deep_network_basic(in_n, hidden, out_n, hidden_activation, output_activation, lrate, metrics_):
+def deep_network_basic(in_n, hidden, out_n, hidden_activation, output_activation, lrate, metrics):
     # This is what we need to build
     model = Sequential();
 
     # Input layer
     model.add(InputLayer(input_shape=(in_n,)))
     for idx, layer_n in enumerate(hidden):
-        print(layer_n)
         title = "hidden" + str(idx)
         model.add(Dense(layer_n, use_bias=True, name=title, activation=hidden_activation))
     model.add(Dense(out_n, use_bias=True, name="hidden2", activation=output_activation))
@@ -162,7 +162,7 @@ def deep_network_basic(in_n, hidden, out_n, hidden_activation, output_activation
                                 epsilon=None, decay=0.0, amsgrad=False)
     
     # Bind the optimizer and the loss function to the model
-    model.compile(loss='mse', optimizer=opt, metrics=metrics_)
+    model.compile(loss='mse', optimizer=opt, metrics=["fvaf","rsme"])
     
     # Generate an ASCII representation of the architecture
     print(model.summary())
@@ -197,10 +197,10 @@ def execute_exp(args=None):
     print("File name base:", fbase)
     
     # Is this a test run?
-    if(args.nogo):
+   # if(args.nogo):
         # Don't execute the experiment
-        print("Test run only")
-        return None
+    #    print("Test run only")
+     #   return None
     
     # Load the data
     fp = open(args.dataset, "rb")
@@ -221,7 +221,7 @@ def execute_exp(args=None):
                                hidden_activation='elu',
                               output_activation='tanh',
                               lrate=args.lrate,
-                              metrics_=["mae"])
+                              metrics=["fvaf","rsme"])
     
     # Report if verbosity is turned on
     if args.verbose >= 1:
@@ -236,7 +236,12 @@ def execute_exp(args=None):
     history = model.fit(x=ins, y=outs, epochs=args.epochs, verbose=args.verbose>=2,
                         validation_data=(ins_validation, outs_validation), 
                         callbacks=[early_stopping_cb])
-        
+    
+    # predict
+    predictions = model.predict(np.asarray(ins))
+    np.savetxt('predictions.csv', predictions, delimiter=',')
+
+    
     # Generate log data
     results = {}
     results['args'] = args
