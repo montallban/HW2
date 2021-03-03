@@ -1,0 +1,18 @@
+2021-03-02 21:43:18.220269: W tensorflow/stream_executor/platform/default/dso_loader.cc:55] Could not load dynamic library 'libnvinfer.so.6'; dlerror: libnvinfer.so.6: cannot open shared object file: No such file or directory
+2021-03-02 21:43:18.220393: W tensorflow/stream_executor/platform/default/dso_loader.cc:55] Could not load dynamic library 'libnvinfer_plugin.so.6'; dlerror: libnvinfer_plugin.so.6: cannot open shared object file: No such file or directory
+2021-03-02 21:43:18.220409: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:30] Cannot dlopen some TensorRT libraries. If you would like to use Nvidia GPU with TensorRT, please make sure the missing libraries mentioned above are installed properly.
+2021-03-02 21:43:21.660117: W tensorflow/stream_executor/platform/default/dso_loader.cc:55] Could not load dynamic library 'libcuda.so.1'; dlerror: libcuda.so.1: cannot open shared object file: No such file or directory
+2021-03-02 21:43:21.660384: E tensorflow/stream_executor/cuda/cuda_driver.cc:351] failed call to cuInit: UNKNOWN ERROR (303)
+2021-03-02 21:43:21.660438: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (c346.oscer.ou.edu): /proc/driver/nvidia/version does not exist
+2021-03-02 21:43:21.660816: I tensorflow/core/platform/cpu_feature_guard.cc:142] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2021-03-02 21:43:21.741270: I tensorflow/core/platform/profile_utils/cpu_utils.cc:94] CPU Frequency: 2297400000 Hz
+2021-03-02 21:43:21.768840: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x8a29890 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-03-02 21:43:21.768890: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+2021-03-02 21:43:22.465655: W tensorflow/core/framework/cpu_allocator_impl.cc:81] Allocation of 181624320 exceeds 10% of system memory.
+2021-03-02 21:52:37.980183: W tensorflow/core/framework/cpu_allocator_impl.cc:81] Allocation of 181624320 exceeds 10% of system memory.
+2021-03-02 21:52:40.192923: W tensorflow/core/framework/cpu_allocator_impl.cc:81] Allocation of 181624320 exceeds 10% of system memory.
+2021-03-02 21:52:41.996620: W tensorflow/core/framework/cpu_allocator_impl.cc:81] Allocation of 181624320 exceeds 10% of system memory.
+2021-03-02 21:52:46.372272: W tensorflow/python/util/util.cc:319] Sets are not currently considered sequences, but this may change in the future, so consider avoiding using them.
+WARNING:tensorflow:From /home/fagg/pythonenv/tensorflow/lib/python3.6/site-packages/tensorflow_core/python/ops/resource_variable_ops.py:1786: calling BaseResourceVariable.__init__ (from tensorflow.python.ops.resource_variable_ops) with constraint is deprecated and will be removed in a future version.
+Instructions for updating:
+If using Keras pass *_constraint arguments to layers.
