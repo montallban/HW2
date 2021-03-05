@@ -16,9 +16,10 @@ import os
 import time
 import re
 import sys
+from functools import partial
 
 
-from tensorflow.keras.layers import InputLayer, Dense
+from tensorflow.keras.layers import InputLayer, Dense, Dropout
 from tensorflow.keras.models import Sequential
 
 #################################################################
@@ -61,6 +62,7 @@ def extract_data(bmi, args):
     # Rotation and number of folds to use for training
     r = args.rotation
     Ntraining = args.Ntraining
+    dropout = args.dropout
     
     # Compute which folds belong in which set
     folds_training = (np.array(range(Ntraining)) + r) % Nfolds
@@ -103,7 +105,8 @@ def augment_args(args):
     #  of experiments that we will be executing
     # Overides Ntraining and rotation
     p = {'Ntraining': [1,2,3,5,10,18], 
-         'rotation': range(20)}
+         'rotation': range(20),
+         'dropout': [None, 0.1, 0.2, 0.5]}
 
     # Create the iterator
     ji = JobIterator(p)
@@ -145,18 +148,51 @@ def generate_fname(args, params_str):
     # Put it all together, including #of training folds and the experiment rotation
     return "%s/%s_%s_hidden_%s_%s"%(args.results_path, args.exp_type, predict_str, hidden_str, params_str)
 
-def deep_network_basic(in_n, hidden, out_n, hidden_activation, output_activation, lrate, metrics_):
-    # This is what we need to build
+def deep_network_basic(in_n, hidden, out_n, hidden_activation, output_activation, lrate,dropout, l1, l2, metrics_):
     model = Sequential();
 
-    # Input layer
-    model.add(InputLayer(input_shape=(in_n,)))
-    for idx, layer_n in enumerate(hidden):
-        print(layer_n)
-        title = "hidden" + str(idx)
-        model.add(Dense(layer_n, use_bias=True, name=title, activation=hidden_activation))
-    model.add(Dense(out_n, use_bias=True, name="output", activation=output_activation))
+    # Construct model
+    # First, check for Lx regularization
+    if l1 != 0 or l2 != 0:
+        model.add(InputLayer(input_shape=(in_n,)))
+        for idx, layer_n in enumerate(hidden):
+            title = "hidden" + str(idx)
+            # Check for either l1 or l2 regularization
+            # And add hidden layers 
+            if l1 != 0:
+                model.add(Dense(layer_n, use_bias=True, name=title,
+                activation=hidden_activation, kernel_initializer="he_normal",
+                kernel_regularizer=keras.regularizers.l1(l1)))
+            if l2 != 0:
+                model.add(Dense(layer_n, use_bias=True, name=title,
+                activation=hidden_activation, kernel_initializer="he_normal",
+                kernel_regularizer=keras.regularizers.l2(l2)))
+        model.add(Dense(out_n, use_bias=True, name="output", activation=output_activation))    
+    # If no LxReg, then build model without it
+    else:
+        model.add(Dropout(dropout, input_shape=(in_n,)))
+        # Add dropout in the input layer and in the hidden layers
+        for idx, layer_n in enumerate(hidden):
+            title = "hidden" + str(idx)
+            model.add(Dense(layer_n, use_bias=True, name=title, activation=hidden_activation))
+            model.add(Dropout(dropout))
+        model.add(Dense(out_n, use_bias=True, name="output", activation=output_activation))
     
+    # other method
+    # Lx regularization
+    # if other == true:
+    #     RegularizedDense = partial(keras.layers.Dense,
+    #         activation="elu",
+    #         kernel_initializer=keras.regularizers.l2(0.01))
+    #     model = keras.models.Sequential([
+    #         keras.layers.Flatten(input_shape=(in_n,),
+    #         RegularizedDense(1000),
+    #         RegularizedDense(100),
+    #         RegularizedDense(10, activation="elu",
+    #         kernel_initalizer="glorot_uniform")))
+    #     ])
+
+
     # Optiemizer
     opt = tf.keras.optimizers.Adam(lr=lrate, beta_1=0.9, beta_2=0.999,
                                 epsilon=None, decay=0.0, amsgrad=False)
@@ -171,11 +207,9 @@ def deep_network_basic(in_n, hidden, out_n, hidden_activation, output_activation
 ########################################################
 
 
-
 def execute_exp(args=None):
     '''
     Perform the training and evaluation for a single model
-    
     @args Argparse arguments
     '''
     # Check the arguments
@@ -197,10 +231,10 @@ def execute_exp(args=None):
     print("File name base:", fbase)
     
     # Is this a test run?
-    #if(args.nogo):
+    if(args.nogo):
         # Don't execute the experiment
-    #    print("Test run only")
-    #    return None
+        print("Test run only")
+        return None
     
     # Load the data
     fp = open(args.dataset, "rb")
@@ -219,8 +253,11 @@ def execute_exp(args=None):
     print(ins.shape[1])
     model = deep_network_basic(ins.shape[1], tuple(args.hidden), outs.shape[1],     # Size of inputs, hidden layer(s) and outputs
                                hidden_activation='elu',
-                              output_activation='elu',
+                              output_activation=None,
                               lrate=args.lrate,
+                              dropout=args.dropout,
+                              l1=args.l1, 
+                              l2=args.l2,
                               metrics_=[fvaf, rmse])
     
     # Report if verbosity is turned on
@@ -231,6 +268,9 @@ def execute_exp(args=None):
     early_stopping_cb = keras.callbacks.EarlyStopping(patience=args.patience,
                                                       restore_best_weights=True,
                                                       min_delta=args.min_delta)
+
+    checkpoint_cb = keras.callbacks.ModelCheckpoint("", save_best_only=True)
+
     
     # Learn
     history = model.fit(x=ins, y=outs, epochs=args.epochs, verbose=args.verbose>=2,
@@ -251,7 +291,7 @@ def execute_exp(args=None):
     
     # Save results
     results['fname_base'] = fbase
-    fp = open("%s_results.pkl"%(fbase), "wb")
+    fp = open("*_results.pkl"%(fbase), "wb")
     pickle.dump(results, fp)
     fp.close()
     
@@ -264,13 +304,13 @@ def create_parser():
     parser = argparse.ArgumentParser(description='BMI Learner')
     parser.add_argument('-rotation', type=int, default=0, help='Cross-validation rotation')
     parser.add_argument('-epochs', type=int, default=100, help='Training epochs')
-    parser.add_argument('-dataset', type=str, default='../../../datasets/bmi_dataset.pkl', help='Data set file')
-    parser.add_argument('-Ntraining', type=int, default=2, help='Number of training folds')
+    parser.add_argument('-dataset', type=str, default=r'home/mcmontalbano/datasets/bmi_dataset.pkl', help='Data set file')
+    parser.add_argument('-Ntraining', type=int, default=0, help='Number of training folds')
     parser.add_argument('-output_type', type=str, default='torque', help='Type to predict')
-    parser.add_argument('-exp_index', type=int, default=-1, help='Experiment index')
+    parser.add_argument('-exp_index', type=int, default=1, help='Experiment index')
     parser.add_argument('-Nfolds', type=int, default=20, help='Maximum number of folds')
-    parser.add_argument('-results_path', type=str, default='./results', help='Results directory')
-    parser.add_argument('-hidden', nargs='+', type=int, default=[100, 10, 100], help='Number of hidden units per layer (sequence of ints)')
+    parser.add_argument('-results_path', type=str, default='/results', help='Results directory')
+    parser.add_argument('-hidden', nargs='+', type=int, default=[1000, 100, 10 ,100, 1000], help='Number of hidden units per layer (sequence of ints)')
     parser.add_argument('-lrate', type=float, default=0.001, help="Learning rate")
     parser.add_argument('-min_delta', type=float, default=0.0, help="Minimum delta for early termination")
     parser.add_argument('-patience', type=int, default=100, help="Patience for early termination")
@@ -278,7 +318,11 @@ def create_parser():
     parser.add_argument('-predict_dim', type=int, default=1, help="Dimension of the output to predict")
     parser.add_argument('-nogo', action='store_true', help='Do not perform the experiment')
     parser.add_argument('-exp_type', type=str, default='bmi', help='High level name for this set of experiments')
-    
+    parser.add_argument('-dropout', type=float, default=0, help='Enter the dropout rate.' )
+    parser.add_argument('-LxReg', type=str, default=None, help='Enter l1, l2, or none.')    
+    parser.add_argument('-l1', type=float, default=0, help='Enter value for l1 in ridge regression.')    
+    parser.add_argument('-l2', type=float, default=0, help='Enter value for l2 in ridge regression.')    
+
     return parser
 
 def check_args(args):
